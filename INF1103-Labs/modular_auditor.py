@@ -21,6 +21,10 @@ def process_delivery(current_total, new_value):
     new_total = current_total + new_value
     return new_total
 
+def calculate_tax(amount):
+    tax = amount * 0.10
+    return tax
+
 #initialize the inventory to zero in the start
 inventory = 0
 failed_entries = 0
