@@ -29,47 +29,18 @@ def generate_report(total_units, failed_attempts):
     print("Total Deliveries Processed:", total_units)
     print("Number of Failed/Rejected Entries:", failed_attempts)
 
-#initialize the inventory to zero in the start
+# Main program
 inventory = 0
 failed_entries = 0
 
-#run in a continuous loop asking user to enter a stock quantity, until the user types quit
 while True:
-    stock = input("Enter stock quantity (or 'quit' to exit): ")
+    stock = get_valid_input()
 
-    #reporting
-    if stock.lower() == "quit":
-        print("Total Units Processed:", inventory)
-        print("Number of Failed/Rejected Entries:", failed_entries)
+    if stock == "quit":
+        generate_report(inventory, failed_entries)
         break
 
-    if stock.startswith("-"):
-        try:
-            #accept stock values as integers
-            stock = int(stock)
+    tax = calculate_tax(stock)
+    inventory = process_delivery(inventory, stock)
 
-            #enforce business rules
-            if stock < 0:
-                print("Error: Stock quantity cannot be negative.")
-                failed_entries += 1
-                continue
-
-            #handle invalid input
-        except ValueError:
-            print("Error: Invalid input. Please enter a whole number.")
-            failed_entries += 1
-            continue
-
-    if not stock.isdigit():
-        print("Error: Invalid input. Please enter a whole number.")
-        failed_entries += 1
-        continue
-
-    stock = int(stock)
-
-    inventory += stock
-
-    #trigger overstock alert
-    if inventory > 500:
-        print("ALERT: Overstock! Inventory exceeds 500 units.")
-        break
+    print("Tax for this delivery:", tax)
