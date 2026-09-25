@@ -1,46 +1,54 @@
-def get_valid_input():
-    while True:
-        stock = input("Enter stock quantity (or 'quit' to exit): ")
+def load_inventory():
+    orders = []
 
-        if stock.lower() == "quit":
-            return "quit"
+    try:
+        with open("orders.txt", "r") as file:
+            for line in file:
+                line = line.strip()
 
-        try:
-            stock = int(stock)
+                if line:
+                    parts = line.split(",")
 
-            if stock < 0:
-                print("Error: Stock quantity cannot be negative.")
-                continue
+                    order_id = int(parts[0])
+                    product_name = parts[1]
+                    quantity = int(parts[2])
 
-            return stock
+                    orders.append([order_id, product_name, quantity])
 
-        except ValueError:
-            print("Error: Invalid input. Please enter a whole number.")
+    except FileNotFoundError:
+        orders = []
 
-def process_delivery(current_total, new_value):
-    new_total = current_total + new_value
-    return new_total
+    return orders
 
-def calculate_tax(amount):
-    tax = amount * 0.10
-    return tax
 
-def generate_report(total_units, failed_attempts):
-    print("Total Deliveries Processed:", total_units)
-    print("Number of Failed/Rejected Entries:", failed_attempts)
+def save_inventory(orders):
+    with open("orders.txt", "w") as file:
+        for order in orders:
+            file.write(f"{order[0]},{order[1]},{order[2]}\n")
+
 
 # Main program
-inventory = 0
-failed_entries = 0
+orders = load_inventory()
 
-while True:
-    stock = get_valid_input()
+print("Current Orders:")
 
-    if stock == "quit":
-        generate_report(inventory, failed_entries)
-        break
+for order in orders:
+    print(f"{order[0]}, {order[1]}, {order[2]}")
 
-    tax = calculate_tax(stock)
-    inventory = process_delivery(inventory, stock)
+product_name = input("\nEnter Product Name: ")
+quantity = int(input("Enter Quantity: "))
 
-    print("Tax for this delivery:", tax)
+if orders:
+    new_order_id = orders[-1][0] + 1
+else:
+    new_order_id = 1001
+
+new_order = [new_order_id, product_name, quantity]
+orders.append(new_order)
+
+print("\nNew Order Added:")
+print(f"{new_order_id},{product_name},{quantity}")
+
+save_inventory(orders)
+
+print("\nOrder successfully saved to orders.txt")
