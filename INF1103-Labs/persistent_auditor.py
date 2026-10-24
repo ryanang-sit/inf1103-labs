@@ -160,3 +160,66 @@ def menu():
     print("5. Save Inventory")
     print("6. Exit")
     print("----------------------------")
+
+# Main program
+
+inventory, transaction_history = load_inventory()
+
+# Add three default products if inventory is empty
+if not inventory.get_products():
+    inventory.add_product(Product("P001", "Laptop", 1200.00, 15))
+    inventory.add_product(Product("P002", "Mouse", 25.50, 40))
+    inventory.add_product(Product("P003", "Keyboard", 45.00, 25))
+
+
+print("========================================")
+print("INVENTORY MANAGEMENT SYSTEM")
+print("========================================")
+
+while True:
+    menu()
+
+    option = input("Enter option: ")
+
+    if option == "1":
+        inventory.display_all()
+
+    elif option == "2":
+        add_product(inventory)
+
+    elif option == "3":
+        update_stock(inventory, transaction_history)
+
+    elif option == "4":
+        print("Search Product")
+
+        product_id = input("Enter Product ID: ")
+        product = inventory.search_product(product_id)
+
+        if product:
+            print("Product Found")
+            print("------------------------------------------------")
+            print("ID:", product.get_id())
+            print("Name:", product.get_name())
+            print(f"Price: ${product.get_price():.2f}")
+            print("Stock:", product.get_stock())
+            print("------------------------------------------------")
+        else:
+            print("Product not found.")
+
+    elif option == "5":
+        print("Saving inventory...")
+        save_inventory(inventory, transaction_history)
+
+    elif option == "6":
+        print("Saving inventory before exit...")
+        save_inventory(inventory, transaction_history)
+
+        print("Inventory saved successfully.")
+        print("Thank you for using Inventory Management System.")
+        print("Program terminated")
+
+        break
+
+    else:
+        print("Invalid option. Please choose 1-6.")
