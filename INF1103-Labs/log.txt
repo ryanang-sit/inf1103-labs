@@ -1,3 +1,51 @@
+commit 0718b85585987ae2b6f38c85f57b5047d40d902a
+Author: Ryan Ang <rryanang@gmail.com>
+Date:   Fri Oct 2 11:46:24 2026 +0800
+
+    CRUD
+
+commit 0257cbd0101a7866313f891ac68e7f1f12c5ece1
+Author: Ryan Ang <rryanang@gmail.com>
+Date:   Fri Sep 25 09:34:02 2026 +0800
+
+    Updated Persistent Auditor
+
+commit a3e60b99b976116ffe1d3e1d76c8ef55decc125e
+Author: Ryan Ang <rryanang@gmail.com>
+Date:   Fri Sep 25 09:26:47 2026 +0800
+
+    Persistent Auditor
+
+commit d4fba4ebebb14b0c4e9ff3bef81486bc9dc2989f
+Author: Ryan Ang <rryanang@gmail.com>
+Date:   Fri Sep 18 13:41:15 2026 +0800
+
+    Update Main Program
+
+commit debdab88eca26eecb95fc0360108fa77915ec26e
+Author: Ryan Ang <rryanang@gmail.com>
+Date:   Fri Sep 18 13:40:25 2026 +0800
+
+    Generate Report Function
+
+commit 3530a0dd37f8ddc6029298e863cb72a1235393e3
+Author: Ryan Ang <rryanang@gmail.com>
+Date:   Fri Sep 18 13:39:40 2026 +0800
+
+    Calculate Tax Function
+
+commit 4a6c739121c7ff9af934582b0250b5940171551d
+Author: Ryan Ang <rryanang@gmail.com>
+Date:   Fri Sep 18 13:38:31 2026 +0800
+
+    Process Delivery Function
+
+commit 3a69de61586a923d5659f3f881d6c24423b4ae13
+Author: Ryan Ang <rryanang@gmail.com>
+Date:   Fri Sep 18 13:37:06 2026 +0800
+
+    Get Valid Input Function
+
 commit 83f884075ceab3040e1f3ac3d9fef6dc7a41d388
 Author: Ryan Ang <rryanang@gmail.com>
 Date:   Fri Sep 11 13:43:18 2026 +0800
