@@ -1,3 +1,21 @@
+commit a00edf503425fce23694594d1e147a59bccf1532
+Author: Ryan Ang <rryanang@gmail.com>
+Date:   Sat Oct 24 16:25:42 2026 +0800
+
+    Refactored inventory system using OOP
+
+commit fe532f65abf4928e27bcf984cfa63c85504935fa
+Author: Ryan Ang <rryanang@gmail.com>
+Date:   Sat Oct 24 16:24:58 2026 +0800
+
+    Created Inventory Class
+
+commit 9db240d4eedd8e375435a5f3a1732b47e0638a9d
+Author: Ryan Ang <rryanang@gmail.com>
+Date:   Sat Oct 24 16:23:22 2026 +0800
+
+    Created Product Class
+
 commit 0718b85585987ae2b6f38c85f57b5047d40d902a
 Author: Ryan Ang <rryanang@gmail.com>
 Date:   Fri Oct 2 11:46:24 2026 +0800

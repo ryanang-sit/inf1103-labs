@@ -1,7 +1,22 @@
+from abc import ABC, abstractmethod
 import json
 
 
-class Product:
+# ---------------------------------------------------------
+# 1. Interfaces (Abstract Base Classes)
+# ---------------------------------------------------------
+class CanBeShipped(ABC):
+
+    @abstractmethod
+    def calculate_shipping_cost(self):
+        """Calculates shipping cost based on product characteristics."""
+        pass
+
+
+# ---------------------------------------------------------
+# 2. Abstract Base Class: Product
+# ---------------------------------------------------------
+class Product(ABC):
 
     def __init__(self, product_id, name, price, stock):
         self.__product_id = product_id
@@ -29,17 +44,88 @@ class Product:
             f"ID: {self.__product_id} | "
             f"Name: {self.__name} | "
             f"Price: ${self.__price:.2f} | "
-            f"Stock: {self.__stock}"
+            f"Stock: {self.__stock}",
+            end="",
         )
+
+    @abstractmethod
+    def get_fulfilment_info(self):
+        """Abstract method to define how the product is fulfilled/delivered."""
+        pass
+
+    @abstractmethod
+    def to_dict(self):
+        """Converts product attributes to a dictionary for JSON saving."""
+        pass
+
+
+# ---------------------------------------------------------
+# 3. Subclass: PhysicalProduct (Inherits Product & CanBeShipped)
+# ---------------------------------------------------------
+class PhysicalProduct(Product, CanBeShipped):
+
+    def __init__(self, product_id, name, price, stock, weight):
+        super().__init__(product_id, name, price, stock)
+        self.__weight = weight
+
+    def get_weight(self):
+        return self.__weight
+
+    def display_information(self):
+        super().display_information()
+        print(f" | Weight: {self.__weight}kg")
+
+    def get_fulfilment_info(self):
+        return "Requires physical shipping and handling."
+
+    def calculate_shipping_cost(self):
+        # Simple rule: base fee $5.00 + $2.00 per kg
+        return 5.00 + (self.__weight * 2.00)
 
     def to_dict(self):
         return {
-            "id": self.__product_id,
-            "name": self.__name,
-            "price": self.__price,
-            "stock": self.__stock,
+            "type": "physical",
+            "id": self.get_id(),
+            "name": self.get_name(),
+            "price": self.get_price(),
+            "stock": self.get_stock(),
+            "weight": self.__weight,
         }
 
+
+# ---------------------------------------------------------
+# 4. Subclass: DigitalProduct (Inherits Product)
+# ---------------------------------------------------------
+class DigitalProduct(Product):
+
+    def __init__(self, product_id, name, price, stock, download_size):
+        super().__init__(product_id, name, price, stock)
+        self.__download_size = download_size
+
+    def get_download_size(self):
+        return self.__download_size
+
+    def display_information(self):
+        super().display_information()
+        print(f" | Download Size: {self.__download_size}MB")
+
+    def get_fulfilment_info(self):
+        return "Delivered digitally via instant download link."
+
+    def to_dict(self):
+        return {
+            "type": "digital",
+            "id": self.get_id(),
+            "name": self.get_name(),
+            "price": self.get_price(),
+            "stock": self.get_stock(),
+            "download_size": self.__download_size,
+        }
+
+
+# ---------------------------------------------------------
+# 5. Inventory Class (Manages a collection of Products)
+# ---------------------------------------------------------
 class Inventory:
 
     def __init__(self):
@@ -56,35 +142,52 @@ class Inventory:
 
     def display_all(self):
         print("Current Inventory")
-        print("------------------------------------------------")
+        print("-----------------------------------------------------------------")
         if not self.__products:
             print("Inventory is empty.")
         else:
             for product in self.__products:
                 product.display_information()
-        print("------------------------------------------------")
+        print("-----------------------------------------------------------------")
 
     def get_products(self):
         return self.__products
 
 
+# ---------------------------------------------------------
+# 6. System Operations & Functions
+# ---------------------------------------------------------
 def add_product(inventory):
     print("Add New Product")
+    print("Select Product Type:")
+    print("1. Physical Product")
+    print("2. Digital Product")
+    choice = input("Enter choice (1/2): ").strip()
 
     product_id = input("Product ID: ")
     product_name = input("Product Name: ")
     price = float(input("Price: "))
     stock = int(input("Stock Quantity: "))
 
-    product = Product(product_id, product_name, price, stock)
-    inventory.add_product(product)
+    if choice == "1":
+        weight = float(input("Weight (kg): "))
+        product = PhysicalProduct(product_id, product_name, price, stock, weight)
+    elif choice == "2":
+        download_size = float(input("Download Size (MB): "))
+        product = DigitalProduct(
+            product_id, product_name, price, stock, download_size
+        )
+    else:
+        print("Invalid type selected. Defaulting to Physical Product.")
+        weight = float(input("Weight (kg): "))
+        product = PhysicalProduct(product_id, product_name, price, stock, weight)
 
+    inventory.add_product(product)
     print("Product added successfully!")
 
 
 def update_stock(inventory, transaction_history):
     print("Update Stock")
-
     product_id = input("Enter Product ID: ")
     product = inventory.search_product(product_id)
 
@@ -100,7 +203,6 @@ def update_stock(inventory, transaction_history):
         transaction_history.append(transaction_amount)
 
         product.update_stock(new_stock)
-
         print("Stock updated successfully!")
     else:
         print("Product not found.")
@@ -118,12 +220,23 @@ def load_inventory():
             transaction_history = data.get("transaction_history", [])
 
             for p_data in products_data:
-                product = Product(
-                    p_data["id"],
-                    p_data["name"],
-                    p_data["price"],
-                    p_data["stock"],
-                )
+                ptype = p_data.get("type", "physical")
+                if ptype == "digital":
+                    product = DigitalProduct(
+                        p_data["id"],
+                        p_data["name"],
+                        p_data["price"],
+                        p_data["stock"],
+                        p_data["download_size"],
+                    )
+                else:
+                    product = PhysicalProduct(
+                        p_data["id"],
+                        p_data["name"],
+                        p_data["price"],
+                        p_data["stock"],
+                        p_data["weight"],
+                    )
                 inventory.add_product(product)
 
             print("inventory.json found.")
@@ -161,24 +274,28 @@ def menu():
     print("6. Exit")
     print("----------------------------")
 
-# Main program
 
+# ---------------------------------------------------------
+# 7. Main Program Execution
+# ---------------------------------------------------------
 inventory, transaction_history = load_inventory()
 
-# Add three default products if inventory is empty
+# Add default products if inventory is empty
 if not inventory.get_products():
-    inventory.add_product(Product("P001", "Laptop", 1200.00, 15))
-    inventory.add_product(Product("P002", "Mouse", 25.50, 40))
-    inventory.add_product(Product("P003", "Keyboard", 45.00, 25))
-
+    inventory.add_product(
+        PhysicalProduct("P001", "Laptop", 1200.00, 15, 2.2)
+    )
+    inventory.add_product(PhysicalProduct("P002", "Mouse", 25.50, 40, 0.15))
+    inventory.add_product(
+        DigitalProduct("P003", "Operating System", 145.00, 100, 4500.0)
+    )
 
 print("========================================")
-print("INVENTORY MANAGEMENT SYSTEM")
+print("INVENTORY MANAGEMENT SYSTEM (LAB 7)")
 print("========================================")
 
 while True:
     menu()
-
     option = input("Enter option: ")
 
     if option == "1":
@@ -192,18 +309,24 @@ while True:
 
     elif option == "4":
         print("Search Product")
-
         product_id = input("Enter Product ID: ")
         product = inventory.search_product(product_id)
 
         if product:
             print("Product Found")
-            print("------------------------------------------------")
+            print("-----------------------------------------------------------------")
             print("ID:", product.get_id())
             print("Name:", product.get_name())
             print(f"Price: ${product.get_price():.2f}")
             print("Stock:", product.get_stock())
-            print("------------------------------------------------")
+            print("Fulfilment:", product.get_fulfilment_info())
+
+            # Check if the product implements CanBeShipped interface
+            if isinstance(product, CanBeShipped):
+                shipping_cost = product.calculate_shipping_cost()
+                print(f"Shipping Cost: ${shipping_cost:.2f}")
+
+            print("-----------------------------------------------------------------")
         else:
             print("Product not found.")
 
@@ -218,7 +341,6 @@ while True:
         print("Inventory saved successfully.")
         print("Thank you for using Inventory Management System.")
         print("Program terminated")
-
         break
 
     else:

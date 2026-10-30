@@ -23,9 +23,16 @@
             "name": "Testing",
             "price": 10.0,
             "stock": 2
+        },
+        {
+            "id": "1103",
+            "name": "Fries",
+            "price": 2.0,
+            "stock": 66
         }
     ],
     "transaction_history": [
-        5
+        5,
+        -1
     ]
 }
