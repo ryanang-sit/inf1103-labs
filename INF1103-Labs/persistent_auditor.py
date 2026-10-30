@@ -166,7 +166,13 @@ def add_product(inventory):
 
     product_id = input("Product ID: ")
     product_name = input("Product Name: ")
-    price = float(input("Price: "))
+
+    # Clean up price input in case the user types '$'
+    price_input = input("Price: ").strip()
+    if price_input.startswith("$"):
+        price_input = price_input[1:]
+    price = float(price_input)
+
     stock = int(input("Stock Quantity: "))
 
     if choice == "1":
@@ -222,20 +228,22 @@ def load_inventory():
             for p_data in products_data:
                 ptype = p_data.get("type", "physical")
                 if ptype == "digital":
+                    download_size = p_data.get("download_size", 100.0)
                     product = DigitalProduct(
                         p_data["id"],
                         p_data["name"],
                         p_data["price"],
                         p_data["stock"],
-                        p_data["download_size"],
+                        download_size,
                     )
                 else:
+                    weight = p_data.get("weight", 1.0)
                     product = PhysicalProduct(
                         p_data["id"],
                         p_data["name"],
                         p_data["price"],
                         p_data["stock"],
-                        p_data["weight"],
+                        weight,
                     )
                 inventory.add_product(product)
 
