@@ -1,3 +1,15 @@
+commit db5ed3695d1597d414324bd4d5e1d30d18221e2c
+Author: Ryan Ang <rryanang@gmail.com>
+Date:   Fri Oct 30 14:35:27 2026 +0800
+
+    Updated Changes
+
+commit 085a3f747a0803d5653ec4ca2b36ec6262e7a322
+Author: Ryan Ang <rryanang@gmail.com>
+Date:   Fri Oct 30 14:29:57 2026 +0800
+
+    Lab 7 Changes
+
 commit a00edf503425fce23694594d1e147a59bccf1532
 Author: Ryan Ang <rryanang@gmail.com>
 Date:   Sat Oct 24 16:25:42 2026 +0800

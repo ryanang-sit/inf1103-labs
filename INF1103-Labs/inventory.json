@@ -1,0 +1,37 @@
+{
+    "inventory": [
+        {
+            "type": "physical",
+            "id": "P001",
+            "name": "Laptop",
+            "price": 1200.0,
+            "stock": 15,
+            "weight": 2.2
+        },
+        {
+            "type": "physical",
+            "id": "P002",
+            "name": "Mouse",
+            "price": 25.5,
+            "stock": 40,
+            "weight": 0.15
+        },
+        {
+            "type": "digital",
+            "id": "P003",
+            "name": "Operating System",
+            "price": 145.0,
+            "stock": 100,
+            "download_size": 4500.0
+        },
+        {
+            "type": "physical",
+            "id": "1067",
+            "name": "Mouse]6.7",
+            "price": 6.7,
+            "stock": 5,
+            "weight": 4.0
+        }
+    ],
+    "transaction_history": []
+}
