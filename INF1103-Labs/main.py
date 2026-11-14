@@ -384,3 +384,41 @@ def load_products(path: str, inventory: Inventory, suppliers: dict) -> None:
         print(f"{loaded} products loaded.")
     finally:
         print("Load attempt finished.")
+
+# ---------------------------------------------------------
+# 9. Main Execution Entry Point
+# ---------------------------------------------------------
+if __name__ == "__main__":
+    print("========================================")
+    print("INVENTORY MANAGEMENT SYSTEM (LAB 9)")
+    print("========================================")
+
+    # Test Supplier and Factory creation
+    supplier = Supplier("S001", "TechCorp Ltd", "contact@techcorp.com")
+    inventory = Inventory()
+
+    # Load products using factory
+    p1 = ProductFactory.create(
+        "physical", "P001", "Desk Lamp", 25.00, 10, supplier, 1.5
+    )
+    d1 = ProductFactory.create(
+        "digital", "D001", "Photo Editor", 49.90, 100, supplier, 45.0
+    )
+
+    inventory.add_product(p1)
+    inventory.add_product(d1)
+
+    inventory.display_all()
+
+    # Test Strategy Pattern with Order
+    order = Order("ORD-001", PercentageDiscount(10))
+    order.add_order_line(p1, 2)  # 2 * 25.00 = 50.00
+    order.add_order_line(d1, 1)  # 1 * 49.90 = 49.90
+    # Subtotal = 99.90, with 10% discount = 89.91
+
+    print(f"Order Subtotal: ${99.90:.2f}")
+    print(f"Order Total with 10% Discount: ${order.calculate_total():.2f}")
+
+    # Switch strategy to BulkDiscount
+    order.set_discount(BulkDiscount(50.0, 15.0))
+    print(f"Order Total with Bulk Discount: ${order.calculate_total():.2f}")
